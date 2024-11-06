@@ -8,9 +8,12 @@
 <body>
 
     <h2>OneDrive File Upload and Download Example</h2>
-
+    
+    <!-- File input for selecting a file -->
+    <input type="file" id="fileInput" />
+    
     <!-- Button to open OneDrive Picker for upload -->
-    <button onclick="openOneDrivePicker()">Upload File to OneDrive</button>
+    <button onclick="uploadToOneDrive()">Upload File to OneDrive</button>
 
     <!-- Button to open OneDrive Picker for download -->
     <button onclick="openOneDrivePickerForDownload()">Download File from OneDrive</button>
@@ -19,27 +22,40 @@
     <p id="fileUploadMessage"></p>
 
 <script type="text/javascript">
-    function openOneDrivePicker() {
-        var odOptions = {
-            clientId: "fd722b2c-fea2-470c-b23b-2f5561801642", // Thay bằng Client ID từ Azure
-            action: "upload", // Tùy chọn hành động là "upload"
-            multiSelect: false, // Cho phép chọn một file
-            //advanced: {
-                //redirectUri: "https://your-redirect-uri.com", // Thay bằng redirect URI của bạn
-                //uploadUrl: "https://graph.microsoft.com/v1.0/me/drive/root:/folder-name:/content" // Thư mục đích trên OneDrive
-            //},
-            success: function(files) {
-                console.log(files);
-            },
-            cancel: function() {
-                alert("Đã hủy thao tác.");
-            },
-            error: function(error) {
-                alert("Lỗi: " + JSON.stringify(error));
+    function uploadToOneDrive() {
+            // Lấy file từ input
+            const fileInput = document.getElementById("fileUploadControl");
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file to upload.");
+                return;
             }
-        };
-        OneDrive.open(odOptions);
-    }
+
+            // Khởi tạo OneDrive Picker
+            var odOptions = {
+                clientId: "fd722b2c-fea2-470c-b23b-2f5561801642",
+                action: "save",
+                sourceInputElementId: "fileUploadControl", // ID của input file
+                fileName: file.name, // Tên file để upload
+                openInNewWindow: true,
+                success: function(response) {
+                    console.log(response);
+                },
+                progress: function(percent) {
+                    console.log("Upload progress:", percent + "%");
+                },
+                cancel: function() {
+                    console.log("Upload cancelled by user.");
+                },
+                error: function(error) {
+                    console.log("Error during upload:", error);
+                }
+            };
+
+            // Mở OneDrive Picker với các tùy chọn đã cấu hình
+            OneDrive.save(odOptions);
+        }
     // Function to open OneDrive Picker for downloading a file
         function openOneDrivePickerForDownload() {
             var odOptions = {
