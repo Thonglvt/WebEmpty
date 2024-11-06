@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OneDrive Integration</title>
+    <script type="text/javascript" src="https://js.live.net/v7.2/OneDrive.js"></script>
+</head>
+<body>
+<button onclick="openOneDrivePicker()">Tải Lên OneDrive</button>
+<button onclick="openOneDrivePickerForDownload()">Tải Xuống từ OneDrive</button>
+
+<script type="text/javascript">
+    function openOneDrivePicker() {
+        var odOptions = {
+            clientId: "fd722b2c-fea2-470c-b23b-2f5561801642", // Thay bằng Client ID từ Azure
+            action: "upload", // Tùy chọn hành động là "upload"
+            multiSelect: false, // Cho phép chọn một file
+            //advanced: {
+                //redirectUri: "https://your-redirect-uri.com", // Thay bằng redirect URI của bạn
+                //uploadUrl: "https://graph.microsoft.com/v1.0/me/drive/root:/folder-name:/content" // Thư mục đích trên OneDrive
+            //},
+            success: function(files) {
+                alert("Tải lên thành công: " + files.value[0].name);
+            },
+            cancel: function() {
+                alert("Đã hủy thao tác.");
+            },
+            error: function(error) {
+                alert("Lỗi: " + JSON.stringify(error));
+            }
+        };
+        OneDrive.open(odOptions);
+    }
+</script>
+</body>
+
+
+</html>
