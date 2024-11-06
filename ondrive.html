@@ -6,8 +6,17 @@
     <script type="text/javascript" src="https://js.live.net/v7.2/OneDrive.js"></script>
 </head>
 <body>
-<button onclick="openOneDrivePicker()">Tải Lên OneDrive</button>
-<button onclick="openOneDrivePickerForDownload()">Tải Xuống từ OneDrive</button>
+
+    <h2>OneDrive File Upload and Download Example</h2>
+
+    <!-- Button to open OneDrive Picker for upload -->
+    <button onclick="openOneDrivePicker()">Upload File to OneDrive</button>
+
+    <!-- Button to open OneDrive Picker for download -->
+    <button onclick="openOneDrivePickerForDownload()">Download File from OneDrive</button>
+
+    <!-- Area to show messages -->
+    <p id="fileUploadMessage"></p>
 
 <script type="text/javascript">
     function openOneDrivePicker() {
@@ -31,6 +40,28 @@
         };
         OneDrive.open(odOptions);
     }
+    // Function to open OneDrive Picker for downloading a file
+        function openOneDrivePickerForDownload() {
+            var odOptions = {
+                clientId: "fd722b2c-fea2-470c-b23b-2f5561801642", // Replace with your Azure AD Application Client ID
+                action: "download", // Action type for downloading files
+                multiSelect: true, // Only allow single file selection
+                success: function(files) {
+                    // Use file's download URL to download the file directly
+                    //var downloadUrl = files.value[0]["@microsoft.graph.downloadUrl"];
+                    //window.open(downloadUrl);
+                    //document.getElementById("fileUploadMessage").textContent = "Downloading file: " + files.value[0].name;
+                    console.log(files);
+                },
+                cancel: function() {
+                    document.getElementById("fileUploadMessage").textContent = "Download was canceled.";
+                },
+                error: function(error) {
+                    document.getElementById("fileUploadMessage").textContent = "Error: " + JSON.stringify(error);
+                }
+            };
+            OneDrive.open(odOptions);
+        }
 </script>
 </body>
 
